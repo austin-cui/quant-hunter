@@ -236,7 +236,7 @@ def main():
     # 机构名单 = resolutions.json（与本地 config.WATCHLIST 同步推送）
     res_path = os.path.join(HERE, "data", "resolutions.json")
     resolutions = json.load(open(res_path, encoding="utf-8"))
-    from config import THEME_MAP, WATCHLIST
+    from config import ALIAS_MAP, THEME_MAP, WATCHLIST
     tier_map = dict(WATCHLIST)  # 与 monitor.resolve_orgs 同一口径（含 _LEGACY 分档）
     orgs, seen = [], set()
     for keyword, entities in resolutions.items():
@@ -247,7 +247,8 @@ def main():
             seen.add(uid)
             orgs.append({
                 "user_id": uid, "org_name": e["org_name"], "keyword": keyword,
-                "title": keyword, "aum_tier": tier_map.get(keyword, "百亿名单"),
+                "title": ALIAS_MAP.get(keyword, keyword),
+                "aum_tier": tier_map.get(keyword, "百亿名单"),
                 "theme": THEME_MAP.get(keyword, ""),
             })
     log(f"监控名单: {len(resolutions)} 品牌 / {len(orgs)} 主体")
