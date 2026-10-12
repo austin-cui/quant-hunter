@@ -105,7 +105,7 @@ export const siteConfig = {
   // 留空则回退为邮件客户端投递；管理页账号 austin.cui@co-careers.com
   supabase: {
     url: 'https://ekjsadjhperkjuswfrpp.supabase.co',
-    anonKey: 'sb_publishable_EExOmYnTEMg4LUu1g3ho5w_2kmbr70x',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVranNhZGpocGVya2p1c3dmcnBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MzEwOTgsImV4cCI6MjEwNjMwNzA5OH0.UPGS_48OyNYO2rwtzGVmgogr2kFxnoA5OUb2Sle9rbA',
   },
 
   /* ---------- 站点元信息 ---------- */
