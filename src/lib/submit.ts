@@ -21,6 +21,23 @@ function getClient(): SupabaseClient {
 
 export type SubmitResult = { ok: boolean; reason: 'not-configured' | 'sent' | 'error' }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+/**
+ * 带重试的写入。背景：Supabase 网关间歇性对合法匿名插入返回 401（官方已知事故），
+ * 错误窗口内重试没有意义，但窗口随时可能翻转；且偶发"返回 401 实际已写入"。
+ * 用 client_token 唯一索引保证幂等：重复插入只会撞唯一约束（409），视为成功。
+ */
+async function insertWithRetry(supabase: SupabaseClient, payload: Record<string, unknown>): Promise<boolean> {
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const { error } = await supabase.from('submissions').insert(payload)
+    if (!error) return true
+    if (error.code === '409' || /duplicate key|unique/i.test(error.message)) return true
+    if (attempt < 4) await sleep(1500 * (attempt + 1))
+  }
+  return false
+}
+
 export async function submitApplication(fields: {
   type: 'apply' | 'register'
   name: string
@@ -38,13 +55,17 @@ export async function submitApplication(fields: {
   if (fields.resume) {
     const safeName = fields.resume.name.replace(/[^\w.\-一-龥]+/g, '_')
     resumePath = `${fields.type}/${Date.now()}-${crypto.randomUUID()}-${safeName}`
-    const { error: upErr } = await supabase.storage.from('resumes').upload(resumePath, fields.resume, {
-      contentType: fields.resume.type || 'application/octet-stream',
-    })
-    if (upErr) return { ok: false, reason: 'error' }
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const { error: upErr } = await supabase.storage.from('resumes').upload(resumePath, fields.resume, {
+        contentType: fields.resume.type || 'application/octet-stream',
+      })
+      if (!upErr) break
+      if (attempt === 2) return { ok: false, reason: 'error' }
+      await sleep(1500)
+    }
   }
 
-  const { error } = await supabase.from('submissions').insert({
+  const ok = await insertWithRetry(supabase, {
     type: fields.type,
     name: fields.name,
     email: fields.email,
@@ -53,7 +74,8 @@ export async function submitApplication(fields: {
     region: fields.region ?? null,
     intro: fields.intro ?? null,
     resume_path: resumePath,
+    client_token: crypto.randomUUID(),
   })
-  if (error) return { ok: false, reason: 'error' }
+  if (!ok) return { ok: false, reason: 'error' }
   return { ok: true, reason: 'sent' }
 }
