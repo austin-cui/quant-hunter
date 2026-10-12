@@ -121,6 +121,12 @@ for _k, _t in _LEGACY:
 for _k in _PROP:
     THEME_MAP[_k] = "量化"
 
+# 品牌别名：title 展示名（关键词不变，AMAC 搜索仍用关键词）。
+# 众量即演量科技（用户确认 2026-10-12），加括号识别。
+ALIAS_MAP = {
+    "众量": "众量（演量科技）",
+}
+
 # WATCHLIST: (关键词, 规模层级)。量化类取 QIML 2026Q3 分档，其余 159 名单成员标 "百亿名单"。
 WATCHLIST = [(k, TIER_MAP.get(k, "百亿名单"))
              for k in _QUANT + _SUBJECTIVE + _CREDIT + _MACRO + _PLATFORM] \
