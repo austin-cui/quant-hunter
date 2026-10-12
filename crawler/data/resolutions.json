@@ -1700,5 +1700,221 @@
    "workerTotalNum": 14,
    "operNum": 13
   }
+ ],
+ "通登": [
+  {
+   "user_id": "1701006109200966",
+   "org_name": "上海通登资产管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 25,
+   "operNum": 24
+  }
+ ],
+ "集微": [
+  {
+   "user_id": "1701006109333919",
+   "org_name": "上海集微私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 30,
+   "operNum": 29
+  }
+ ],
+ "杉泰": [
+  {
+   "user_id": "1701006109317285",
+   "org_name": "上海杉泰私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 23,
+   "operNum": 19
+  }
+ ],
+ "虑得": [
+  {
+   "user_id": "2309081655330809",
+   "org_name": "上海虑得私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 27,
+   "operNum": 18
+  }
+ ],
+ "众量": [
+  {
+   "user_id": "1701006109222975",
+   "org_name": "上海众量私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 18,
+   "operNum": 18
+  }
+ ],
+ "和谐浩数": [
+  {
+   "user_id": "1701006109225736",
+   "org_name": "和谐浩数投资管理（北京）有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 18,
+   "operNum": 13
+  }
+ ],
+ "青琰": [
+  {
+   "user_id": "2207291331384162",
+   "org_name": "上海青琰私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 47,
+   "operNum": 45
+  }
+ ],
+ "希格斯": [
+  {
+   "user_id": "1701006109519838",
+   "org_name": "杭州希格斯投资管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 32,
+   "operNum": 31
+  }
+ ],
+ "华钧广汇": [
+  {
+   "user_id": "1701006109435289",
+   "org_name": "北京华钧广汇投资管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 29,
+   "operNum": 28
+  }
+ ],
+ "慎元": [
+  {
+   "user_id": "2311211027230062",
+   "org_name": "上海慎元私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 5,
+   "operNum": 5
+  }
+ ],
+ "量游": [
+  {
+   "user_id": "1701006109223030",
+   "org_name": "上海量游资产管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 21,
+   "operNum": 20
+  }
+ ],
+ "香农": [
+  {
+   "user_id": "2108021316015692",
+   "org_name": "海南三亚香农私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 12,
+   "operNum": 12
+  }
+ ],
+ "吾执": [
+  {
+   "user_id": "2006172200219423",
+   "org_name": "上海吾执投资管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 18,
+   "operNum": 17
+  }
+ ],
+ "成均": [
+  {
+   "user_id": "2008061011416268",
+   "org_name": "上海成均资产管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 13,
+   "operNum": 12
+  }
+ ],
+ "锴量": [
+  {
+   "user_id": "1701006109628896",
+   "org_name": "上海锴量投资管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 11,
+   "operNum": 10
+  }
+ ],
+ "星鹏联海": [
+  {
+   "user_id": "1701006109232171",
+   "org_name": "北京星鹏联海私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 44,
+   "operNum": 36
+  }
+ ],
+ "宁苑": [
+  {
+   "user_id": "1701006109225023",
+   "org_name": "上海宁苑资产管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 18,
+   "operNum": 18
+  }
+ ],
+ "智龙": [
+  {
+   "user_id": "1701006109226365",
+   "org_name": "深圳前海智龙资本管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 12,
+   "operNum": 9
+  }
+ ],
+ "添禄": [
+  {
+   "user_id": "1701006109368984",
+   "org_name": "上海添禄投资管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 49,
+   "operNum": 46
+  }
+ ],
+ "合绎": [
+  {
+   "user_id": "1701006109394962",
+   "org_name": "上海合绎投资管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 13,
+   "operNum": 13
+  }
+ ],
+ "锦福源": [
+  {
+   "user_id": "2202151706582585",
+   "org_name": "锦福源（海南）私募基金管理合伙企业（有限合伙）",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 19,
+   "operNum": 19
+  }
+ ],
+ "昭明": [
+  {
+   "user_id": "2512051135549510",
+   "org_name": "海南昭明私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 9,
+   "operNum": 9
+  }
+ ],
+ "江天": [
+  {
+   "user_id": "1701006109231740",
+   "org_name": "上海江天私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 21,
+   "operNum": 19
+  }
+ ],
+ "裕锦": [
+  {
+   "user_id": "2003251021300038",
+   "org_name": "深圳裕锦私募证券基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 16,
+   "operNum": 15
+  }
  ]
 }
