@@ -1916,5 +1916,21 @@
    "workerTotalNum": 16,
    "operNum": 15
   }
+ ],
+ "乐水": [
+  {
+   "user_id": "2212081501384549",
+   "org_name": "北京乐水私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 38,
+   "operNum": 35
+  },
+  {
+   "user_id": "2303071627104690",
+   "org_name": "珠海乐水私募基金管理合伙企业（有限合伙）",
+   "org_type": "私募股权、创业投资基金管理人",
+   "workerTotalNum": 7,
+   "operNum": 5
+  }
  ]
 }
