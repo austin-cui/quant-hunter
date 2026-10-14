@@ -74,7 +74,7 @@ export default function RegisterCta() {
   }
 
   return (
-    <section className="border-t border-border/60 bg-card/20">
+    <section id="register" className="border-t border-border/60 bg-card/20">
       <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
         <SectionHeading
           eyebrow="Join Talent Pool"
