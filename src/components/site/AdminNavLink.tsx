@@ -1,19 +1,12 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router'
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { siteConfig } from '@/config/site'
 
 /**
  * 「投递管理」导航入口 + 未读徽标。
- * 仅当本浏览器已登录管理账号（Supabase 会话）时显示——候选人看不到入口；
+ * 仅当本浏览器已登录管理账号（本地令牌）时显示——候选人看不到入口；
  * 未读数在打开页面时查一次，之后固定在每天 9:00 刷新。
  */
-let client: SupabaseClient | null = null
-function getClient(): SupabaseClient | null {
-  if (!siteConfig.supabase.url || !siteConfig.supabase.anonKey) return null
-  if (!client) client = createClient(siteConfig.supabase.url, siteConfig.supabase.anonKey)
-  return client
-}
 
 /** 距离下一个 9:00 的毫秒数 */
 function msUntilNextNine(): number {
@@ -28,21 +21,27 @@ export default function AdminNavLink({ mobile = false, onClick }: { mobile?: boo
   const [unread, setUnread] = useState<number | null>(null)
 
   useEffect(() => {
-    const sb = getClient()
-    if (!sb) return
+    if (!siteConfig.api.baseUrl) return
+    const token = localStorage.getItem('qh_admin_token')
+    if (!token) return
     let stop = false
     const check = async () => {
-      const { data } = await sb.auth.getSession()
-      if (stop) return
-      if (!data.session) {
-        setUnread(null)
-        return
+      try {
+        const res = await fetch(`${siteConfig.api.baseUrl}/api/unread-count`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (stop) return
+        if (res.status === 401) {
+          localStorage.removeItem('qh_admin_token')
+          setUnread(null)
+          return
+        }
+        if (!res.ok) return
+        const data = (await res.json()) as { count: number }
+        if (!stop) setUnread(data.count)
+      } catch {
+        /* 网络错误保持原状 */
       }
-      const { count } = await sb
-        .from('submissions')
-        .select('id', { count: 'exact', head: true })
-        .eq('read', false)
-      if (!stop) setUnread(count ?? 0)
     }
     check()
     // 打开页面时查一次；之后固定在每天 9:00 刷新（页面没开时，下次打开会自然补上）
@@ -52,11 +51,9 @@ export default function AdminNavLink({ mobile = false, onClick }: { mobile?: boo
       timer = setTimeout(tick, msUntilNextNine())
     }
     timer = setTimeout(tick, msUntilNextNine())
-    const { data: sub } = sb.auth.onAuthStateChange(() => check())
     return () => {
       stop = true
       clearTimeout(timer)
-      sub.subscription.unsubscribe()
     }
   }, [])
 
