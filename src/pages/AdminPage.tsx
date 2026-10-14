@@ -142,9 +142,13 @@ export default function AdminPage() {
     URL.revokeObjectURL(url)
   }
 
+  /** 列表变化后通知导航栏未读徽标立即刷新（否则要等下次 9:00 定时或手动刷新） */
+  const notifyChanged = () => window.dispatchEvent(new CustomEvent('qh:submissions-changed'))
+
   const markRead = async (id: number) => {
     await api(`/api/submissions/${id}/read`, { method: 'POST', body: JSON.stringify({ value: 1 }) })
     setRows((rs) => rs?.map((r) => (r.id === id ? { ...r, read: 1 } : r)) ?? null)
+    notifyChanged()
   }
 
   const togglePin = async (row: Submission) => {
@@ -164,6 +168,7 @@ export default function AdminPage() {
     if (!window.confirm(`确定删除「${row.name}」的投递记录吗？此操作不可恢复。`)) return
     await api(`/api/submissions/${row.id}`, { method: 'DELETE' })
     setRows((rs) => rs?.filter((r) => r.id !== row.id) ?? null)
+    notifyChanged()
   }
 
   if (!configured) {
