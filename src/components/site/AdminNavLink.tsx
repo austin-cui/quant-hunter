@@ -5,7 +5,7 @@ import { siteConfig } from '@/config/site'
 /**
  * 「投递管理」导航入口 + 未读徽标。
  * 仅当本浏览器已登录管理账号（本地令牌）时显示——候选人看不到入口；
- * 未读数在打开页面时查一次，之后固定在每天 9:00 刷新。
+ * 未读数在打开页面时查一次、固定在每天 9:00 刷新，管理页有已读/删除操作时立即重查。
  */
 
 /** 距离下一个 9:00 的毫秒数 */
@@ -45,6 +45,11 @@ export default function AdminNavLink({ mobile = false, onClick }: { mobile?: boo
     }
     check()
     // 打开页面时查一次；之后固定在每天 9:00 刷新（页面没开时，下次打开会自然补上）
+    // 管理页内的已读/删除操作会派发 qh:submissions-changed，收到立即重查，徽标实时更新
+    const onChanged = () => {
+      check()
+    }
+    window.addEventListener('qh:submissions-changed', onChanged)
     let timer: ReturnType<typeof setTimeout>
     const tick = () => {
       check()
@@ -54,6 +59,7 @@ export default function AdminNavLink({ mobile = false, onClick }: { mobile?: boo
     return () => {
       stop = true
       clearTimeout(timer)
+      window.removeEventListener('qh:submissions-changed', onChanged)
     }
   }, [])
 
