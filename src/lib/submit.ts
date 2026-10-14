@@ -1,43 +1,33 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { siteConfig } from '@/config/site'
 
 /**
- * 表单投递 —— 写入 Supabase：文本字段进 submissions 表，简历附件进 resumes 存储桶。
- * 数据库策略：匿名用户只能写入，读取/标记已读仅限 /admin 登录账号（authenticated）。
- * siteConfig.supabase.url / anonKey 留空时返回 not-configured，调用方回退为 mailto 投递。
+ * 表单投递 —— 写入 Cloudflare Worker（D1 表 + R2 简历附件）。
+ * 2026-10-13 从 Supabase 迁移：免费版匿名网关按时间段翻转、间歇性拒绝写入，无法根治。
+ * siteConfig.api.baseUrl 留空时返回 not-configured，调用方回退为 mailto 投递。
  */
-let client: SupabaseClient | null = null
 
 export function isFormConfigured(): boolean {
-  return Boolean(siteConfig.supabase.url && siteConfig.supabase.anonKey)
-}
-
-function getClient(): SupabaseClient {
-  if (!client) {
-    client = createClient(siteConfig.supabase.url, siteConfig.supabase.anonKey)
-  }
-  return client
+  return Boolean(siteConfig.api.baseUrl)
 }
 
 export type SubmitResult = { ok: boolean; reason: 'not-configured' | 'sent' | 'error' }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-/**
- * 带重试的写入。背景：Supabase 网关间歇性对合法匿名插入返回 401（官方已知事故），
- * 错误窗口内重试没有意义，但窗口随时可能翻转；且偶发"返回 401 实际已写入"。
- * 用 client_token 唯一索引保证幂等：重复插入只会撞唯一约束（409），视为成功。
- */
-async function insertWithRetry(supabase: SupabaseClient, payload: Record<string, unknown>): Promise<boolean> {
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const { error } = await supabase.from('submissions').insert(payload)
-    if (!error) return true
-    if (error.code === '409' || /duplicate key|unique/i.test(error.message)) return true
-    if (attempt < 4) await sleep(1500 * (attempt + 1))
+async function fileToBase64(file: File): Promise<string> {
+  const buf = new Uint8Array(await file.arrayBuffer())
+  let bin = ''
+  const chunk = 0x8000
+  for (let i = 0; i < buf.length; i += chunk) {
+    bin += String.fromCharCode(...buf.subarray(i, i + chunk))
   }
-  return false
+  return btoa(bin)
 }
 
+/**
+ * 带重试的写入。client_token 幂等：Worker 对重复 token 返回 duplicated，
+ * 视为成功；网络层错误按指数退避重试 3 次。
+ */
 export async function submitApplication(fields: {
   type: 'apply' | 'register'
   name: string
@@ -49,33 +39,35 @@ export async function submitApplication(fields: {
   resume?: File | null
 }): Promise<SubmitResult> {
   if (!isFormConfigured()) return { ok: false, reason: 'not-configured' }
-  const supabase = getClient()
 
-  let resumePath: string | null = null
-  if (fields.resume) {
-    const safeName = fields.resume.name.replace(/[^\w.\-一-龥]+/g, '_')
-    resumePath = `${fields.type}/${Date.now()}-${crypto.randomUUID()}-${safeName}`
-    for (let attempt = 0; attempt < 3; attempt++) {
-      const { error: upErr } = await supabase.storage.from('resumes').upload(resumePath, fields.resume, {
-        contentType: fields.resume.type || 'application/octet-stream',
+  const clientToken = crypto.randomUUID()
+  const resume = fields.resume
+    ? { name: fields.resume.name, type: fields.resume.type || 'application/octet-stream', data: await fileToBase64(fields.resume) }
+    : null
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(`${siteConfig.api.baseUrl}/api/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: fields.type,
+          name: fields.name,
+          email: fields.email,
+          job_title: fields.jobTitle ?? null,
+          direction: fields.direction ?? null,
+          region: fields.region ?? null,
+          intro: fields.intro ?? null,
+          client_token: clientToken,
+          resume,
+        }),
       })
-      if (!upErr) break
-      if (attempt === 2) return { ok: false, reason: 'error' }
-      await sleep(1500)
+      if (res.status === 201 || res.status === 200) return { ok: true, reason: 'sent' }
+      if (res.status === 400 || res.status === 413) return { ok: false, reason: 'error' } // 参数问题重试无意义
+    } catch {
+      // 网络错误，继续重试
     }
+    if (attempt < 2) await sleep(1500 * (attempt + 1))
   }
-
-  const ok = await insertWithRetry(supabase, {
-    type: fields.type,
-    name: fields.name,
-    email: fields.email,
-    job_title: fields.jobTitle ?? null,
-    direction: fields.direction ?? null,
-    region: fields.region ?? null,
-    intro: fields.intro ?? null,
-    resume_path: resumePath,
-    client_token: crypto.randomUUID(),
-  })
-  if (!ok) return { ok: false, reason: 'error' }
-  return { ok: true, reason: 'sent' }
+  return { ok: false, reason: 'error' }
 }
