@@ -100,12 +100,11 @@ export const siteConfig = {
   privacyNote:
     '你的简历绝不在未经你同意时提供给任何机构；每次推荐前都会与你确认机构与岗位要求。',
 
-  /* ---------- 投递存储（Supabase：提交保存在数据库，/admin 管理页查看下载） ---------- */
-  // Supabase 项目 quant-hunter（2026-09-30 建，凭据见工作区 .supabase-credentials.txt）
-  // 留空则回退为邮件客户端投递；管理页账号 austin.cui@co-careers.com
-  supabase: {
-    url: 'https://ekjsadjhperkjuswfrpp.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVranNhZGpocGVya2p1c3dmcnBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MzEwOTgsImV4cCI6MjEwNjMwNzA5OH0.UPGS_48OyNYO2rwtzGVmgogr2kFxnoA5OUb2Sle9rbA',
+  /* ---------- 投递存储（Cloudflare Worker + D1 + R2，2026-10-13 从 Supabase 迁移） ---------- */
+  // 提交保存在 Cloudflare D1 数据库，简历附件存 R2；/admin 管理页凭密码查看下载。
+  // 留空 api.baseUrl 则回退为邮件客户端投递；管理页账号 austin.cui@co-careers.com
+  api: {
+    baseUrl: 'https://quant-hunter-api.austin-cui.workers.dev',
   },
 
   /* ---------- 站点元信息 ---------- */
