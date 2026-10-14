@@ -54,7 +54,10 @@ export default function Hero() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="w-full gap-2 sm:w-auto">
-              <a href={`mailto:${siteConfig.contact.email}`}>
+              <a href="#register" onClick={(e) => {
+                e.preventDefault()
+                document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })
+              }}>
                 <Mail className="h-4 w-4" />
                 投递简历
               </a>
