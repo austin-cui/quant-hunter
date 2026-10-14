@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js'
 import {
   Lock, LogOut, RefreshCw, FileText, Mail, Check, Loader2, Inbox,
   Pin, PinOff, Trash2,
@@ -19,8 +18,26 @@ type Submission = {
   region: string | null
   intro: string | null
   resume_path: string | null
-  read: boolean
-  pinned: boolean
+  read: number
+  pinned: number
+}
+
+const TOKEN_KEY = 'qh_admin_token'
+
+function getToken(): string | null {
+  return localStorage.getItem(TOKEN_KEY)
+}
+
+async function api(path: string, init?: RequestInit): Promise<Response> {
+  const token = getToken()
+  return fetch(`${siteConfig.api.baseUrl}${path}`, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(init?.headers ?? {}),
+    },
+  })
 }
 
 function fmtTime(iso: string) {
@@ -31,9 +48,8 @@ function fmtTime(iso: string) {
 
 /** 投递管理页：登录后查看候选人提交（/admin 不在站内导航中暴露，且已屏蔽搜索引擎收录） */
 export default function AdminPage() {
-  const configured = Boolean(siteConfig.supabase.url && siteConfig.supabase.anonKey)
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
+  const configured = Boolean(siteConfig.api.baseUrl)
+  const [authed, setAuthed] = useState<boolean | null>(getToken() ? null : false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginErr, setLoginErr] = useState('')
@@ -51,73 +67,89 @@ export default function AdminPage() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!configured) return
-    const sb = createClient(siteConfig.supabase.url, siteConfig.supabase.anonKey)
-    setSupabase(sb)
-    sb.auth.getSession().then(({ data }) => setSession(data.session))
-    const { data: sub } = sb.auth.onAuthStateChange((_e, s) => setSession(s))
-    return () => sub.subscription.unsubscribe()
-  }, [configured])
-
-  const load = async (sb: SupabaseClient) => {
+  const load = async () => {
     setErr('')
-    const { data, error } = await sb
-      .from('submissions')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(200)
-    if (error) setErr('读取失败：' + error.message)
-    // 置顶优先：客户端排序，避免依赖 pinned 列（数据库未升级时列表仍可用）
-    const sorted = ((data as Submission[] | null) ?? []).sort(
-      (a, b) =>
-        Number(b.pinned) - Number(a.pinned) ||
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    const res = await api('/api/submissions')
+    if (res.status === 401) {
+      localStorage.removeItem(TOKEN_KEY)
+      setAuthed(false)
+      setRows(null)
+      return
+    }
+    if (!res.ok) {
+      setErr('读取失败，请稍后重试')
+      return
+    }
+    const data = (await res.json()) as { rows: Submission[] }
+    setRows(
+      (data.rows ?? []).sort(
+        (a, b) =>
+          Number(b.pinned) - Number(a.pinned) ||
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      ),
     )
-    setRows(sorted.length ? sorted : (data as Submission[] | null))
   }
 
   useEffect(() => {
-    if (supabase && session) load(supabase)
+    if (authed === null) {
+      // 有本地令牌：直接尝试加载（失败会清令牌回登录框）
+      load().then(() => setAuthed(getToken() ? true : false))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supabase, session])
+  }, [])
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!supabase) return
     setBusy(true)
     setLoginErr('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    setBusy(false)
-    if (error) setLoginErr('登录失败：' + error.message)
+    try {
+      const res = await fetch(`${siteConfig.api.baseUrl}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data.token) {
+        setLoginErr('登录失败：邮箱或密码不正确')
+        setBusy(false)
+        return
+      }
+      localStorage.setItem(TOKEN_KEY, data.token)
+      setAuthed(true)
+      setBusy(false)
+      load()
+    } catch {
+      setLoginErr('登录失败：网络错误，请重试')
+      setBusy(false)
+    }
   }
 
-  const logout = async () => {
-    if (supabase) await supabase.auth.signOut()
+  const logout = () => {
+    localStorage.removeItem(TOKEN_KEY)
+    setAuthed(false)
+    setRows(null)
   }
 
   const download = async (path: string) => {
-    if (!supabase) return
-    const { data, error } = await supabase.storage.from('resumes').download(path)
-    if (error || !data) return
-    const url = URL.createObjectURL(data)
+    const res = await api(`/api/resume/${encodeURIComponent(path)}`)
+    if (!res.ok) return
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = path.split('/').pop() || 'resume'
+    a.download = decodeURIComponent(path.split('/').pop() || 'resume')
     a.click()
     URL.revokeObjectURL(url)
   }
 
   const markRead = async (id: number) => {
-    if (!supabase) return
-    await supabase.from('submissions').update({ read: true }).eq('id', id)
-    setRows((rs) => rs?.map((r) => (r.id === id ? { ...r, read: true } : r)) ?? null)
+    await api(`/api/submissions/${id}/read`, { method: 'POST', body: JSON.stringify({ value: 1 }) })
+    setRows((rs) => rs?.map((r) => (r.id === id ? { ...r, read: 1 } : r)) ?? null)
   }
 
   const togglePin = async (row: Submission) => {
-    if (!supabase) return
-    const pinned = !row.pinned
-    await supabase.from('submissions').update({ pinned }).eq('id', row.id)
+    const pinned = row.pinned ? 0 : 1
+    await api(`/api/submissions/${row.id}/pin`, { method: 'POST', body: JSON.stringify({ value: pinned }) })
     setRows((rs) =>
       rs
         ?.map((r) => (r.id === row.id ? { ...r, pinned } : r))
@@ -129,24 +161,20 @@ export default function AdminPage() {
   }
 
   const remove = async (row: Submission) => {
-    if (!supabase) return
     if (!window.confirm(`确定删除「${row.name}」的投递记录吗？此操作不可恢复。`)) return
-    if (row.resume_path) {
-      await supabase.storage.from('resumes').remove([row.resume_path])
-    }
-    await supabase.from('submissions').delete().eq('id', row.id)
+    await api(`/api/submissions/${row.id}`, { method: 'DELETE' })
     setRows((rs) => rs?.filter((r) => r.id !== row.id) ?? null)
   }
 
   if (!configured) {
     return (
       <div className="mx-auto max-w-md px-4 py-32 text-center text-muted-foreground">
-        管理页未配置（缺少 Supabase 连接信息）。
+        管理页未配置（缺少 API 连接信息）。
       </div>
     )
   }
 
-  if (!session) {
+  if (!authed) {
     return (
       <div className="mx-auto max-w-sm px-4 py-28">
         <div className="rounded-xl border border-border bg-card p-8">
@@ -174,6 +202,9 @@ export default function AdminPage() {
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               登录
             </Button>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              简历存储于加密数据库，仅顾问本人可登录查看；登录状态在本机保留 30 天。
+            </p>
           </form>
         </div>
       </div>
@@ -195,7 +226,7 @@ export default function AdminPage() {
           )}
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => supabase && load(supabase)} className="gap-1.5">
+          <Button variant="outline" size="sm" onClick={() => load()} className="gap-1.5">
             <RefreshCw className="h-3.5 w-3.5" /> 刷新
           </Button>
           <Button variant="outline" size="sm" onClick={logout} className="gap-1.5">
@@ -230,7 +261,7 @@ export default function AdminPage() {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    {r.pinned && <Pin className="h-3.5 w-3.5 fill-primary text-primary" />}
+                    {!!r.pinned && <Pin className="h-3.5 w-3.5 fill-primary text-primary" />}
                     {!r.read && <span className="h-2 w-2 rounded-full bg-primary" />}
                     <span className="font-display font-bold">{r.name}</span>
                     <span className="text-xs text-muted-foreground">{fmtTime(r.created_at)}</span>
