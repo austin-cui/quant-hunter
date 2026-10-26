@@ -150,6 +150,11 @@ export default function RegisterCta() {
               提交未成功，请直接把简历发送至 {siteConfig.contact.email}
             </p>
           )}
+          {hasForm && (
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              在线提交需连接 VPN；无法提交时，请直接把简历发送至 {siteConfig.contact.email}。
+            </p>
+          )}
           <Button
             type="submit"
             size="lg"
