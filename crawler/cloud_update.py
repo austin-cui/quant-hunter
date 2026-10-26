@@ -37,6 +37,17 @@ PAGES_DB = f"https://austin-cui.github.io/quant-hunter/flow/data/db.json"
 
 BJ = timezone(timedelta(hours=8))  # 北京时间
 
+# ---------- 拼音检索字段（与 export_data.py 同口径；优先用 crawler/vendor 内置包） ----------
+sys.path.insert(0, os.path.join(HERE, "vendor"))
+try:
+    from pypinyin import lazy_pinyin, Style
+
+    def to_pinyin(name: str) -> str:
+        return " ".join(lazy_pinyin(name or "", style=Style.NORMAL))
+except Exception:  # pragma: no cover
+    def to_pinyin(name: str) -> str:
+        return ""
+
 
 def log(*a):
     print(*a, flush=True)
@@ -336,6 +347,7 @@ def main():
             "history": hist, "departed": True,
             "departed_at": today, "departed_org": c["org_name"],
             "org_tenure_from": start,
+            "pinyin": to_pinyin(r.get("user_name", "")),
         }
         alumni_new.append(person)
         c["profile"] = {k: person[k] for k in
@@ -358,6 +370,8 @@ def main():
         p["title"] = title_of.get(p["org_user_id"], "")
         p["tier"] = tier_of.get(p["org_user_id"], "")
         p["trace_url"] = trace(p["org_user_id"])
+        if not p.get("pinyin"):
+            p["pinyin"] = to_pinyin(p.get("user_name", ""))
         soc = social_by_cert.get(p["cert_code"])
         if soc:
             p["social"] = soc
