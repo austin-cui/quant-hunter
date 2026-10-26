@@ -1932,5 +1932,32 @@
    "workerTotalNum": 7,
    "operNum": 5
   }
+ ],
+ "英仕曼": [
+  {
+   "user_id": "1701006109377623",
+   "org_name": "英仕曼（上海）投资管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 8,
+   "operNum": 6
+  }
+ ],
+ "博普资产": [
+  {
+   "user_id": "1701006109440054",
+   "org_name": "深圳前海博普资产管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 24,
+   "operNum": 23
+  }
+ ],
+ "太衍": [
+  {
+   "user_id": "2503241315122363",
+   "org_name": "上海太衍私募基金管理有限公司",
+   "org_type": "私募证券投资基金管理人",
+   "workerTotalNum": 18,
+   "operNum": 18
+  }
  ]
 }
