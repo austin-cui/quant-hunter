@@ -8,8 +8,18 @@
       content="专注量化、机器学习与金融科技领域的人才招聘：最新在招岗位、匿名成功案例与候选人登记。每个岗位均有独立链接，可直接转发。"
     />
     <title>Quant Hunter | 量化人才猎头</title>
-    <script type="module" crossorigin src="/quant-hunter/assets/index-DOSd0w2h.js"></script>
-    <link rel="stylesheet" crossorigin href="/quant-hunter/assets/index-Bgs10cXq.css">
+    <script>
+      // 首屏前应用主题选择，避免闪烁；默认夜间模式（无 light class）
+      ;(function () {
+        try {
+          if (localStorage.getItem('qh-theme') === 'light') {
+            document.documentElement.classList.add('light')
+          }
+        } catch (e) {}
+      })()
+    </script>
+    <script type="module" crossorigin src="/quant-hunter/assets/index-BCJ2cvaB.js"></script>
+    <link rel="stylesheet" crossorigin href="/quant-hunter/assets/index-CdhrFve5.css">
   </head>
   <body>
     <div id="root"></div>
