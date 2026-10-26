@@ -34,6 +34,37 @@
     --sidebar-border: 220 15% 16%;
     --sidebar-ring: 40 62% 55%;
   }
+
+  /* ===== 白天模式：暖纸白 + 深金（默认仍是上面的暗色） ===== */
+  html.light {
+    --background: 45 35% 96%;        /* 暖纸白 */
+    --foreground: 222 30% 14%;       /* 墨蓝黑 */
+    --card: 0 0% 100%;
+    --card-foreground: 222 30% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 30% 14%;
+    --primary: 38 68% 40%;           /* 深金，浅底上保证对比度 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 25% 92%;
+    --secondary-foreground: 222 30% 14%;
+    --muted: 40 20% 93%;
+    --muted-foreground: 222 10% 42%;
+    --accent: 40 25% 92%;
+    --accent-foreground: 222 30% 14%;
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 40 12% 84%;
+    --input: 40 10% 78%;
+    --ring: 38 68% 40%;
+    --sidebar-background: 45 35% 96%;
+    --sidebar-foreground: 222 30% 14%;
+    --sidebar-primary: 38 68% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 40 25% 92%;
+    --sidebar-accent-foreground: 222 30% 14%;
+    --sidebar-border: 40 12% 84%;
+    --sidebar-ring: 38 68% 40%;
+  }
 }
 
 @layer base {
@@ -53,9 +84,19 @@
       radial-gradient(ellipse 60% 40% at 90% 110%, hsl(40 40% 10% / 0.35), transparent);
     background-attachment: fixed;
   }
+  html.light body {
+    /* 白天模式：暖白纸面 + 淡金晕染 */
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(45 65% 92% / 0.9), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 110%, hsl(40 75% 87% / 0.45), transparent);
+  }
   ::selection {
     background: hsl(40 62% 55% / 0.85);
     color: hsl(222 33% 8%);
+  }
+  html.light ::selection {
+    background: hsl(38 68% 40% / 0.9);
+    color: hsl(0 0% 100%);
   }
   /* 细滚动条 */
   ::-webkit-scrollbar {
@@ -67,6 +108,12 @@
   ::-webkit-scrollbar-thumb {
     background: hsl(220 15% 20%);
     border-radius: 5px;
+  }
+  html.light ::-webkit-scrollbar-track {
+    background: hsl(45 30% 93%);
+  }
+  html.light ::-webkit-scrollbar-thumb {
+    background: hsl(40 12% 76%);
   }
 }
 
@@ -82,6 +129,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+  html.light .text-gold-gradient {
+    background: linear-gradient(120deg, hsl(38 62% 38%), hsl(40 72% 28%));
+    -webkit-background-clip: text;
+    background-clip: text;
   }
   /* 卡片悬浮微光 */
   .card-glow {
