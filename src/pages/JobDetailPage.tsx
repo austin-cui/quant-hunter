@@ -256,6 +256,11 @@ function ApplyPanel({
             提交未成功，请把简历发送至 {siteConfig.contact.email}
           </p>
         )}
+        {hasForm && status !== 'error' && (
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            在线提交需连接 VPN，也可微信扫码直投。
+          </p>
+        )}
         <Button type="submit" disabled={status === 'sending'} className="w-full gap-2 font-semibold">
           {status === 'sending' ? (
             <Loader2 className="h-4 w-4 animate-spin" />
