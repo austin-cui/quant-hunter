@@ -5,6 +5,7 @@ import { siteConfig } from '@/config/site'
 import { getAllJobs } from '@/content/jobs'
 import { Button } from '@/components/ui/button'
 import AdminNavLink from '@/components/site/AdminNavLink'
+import ThemeToggle from '@/components/site/ThemeToggle'
 
 const navItems = [
   { to: '/', label: '首页' },
@@ -78,6 +79,7 @@ export default function Navbar() {
             ),
           )}
           <AdminNavLink />
+          <ThemeToggle />
           <Button asChild size="sm" className="ml-3 font-semibold">
             <Link to="/jobs">
               在招岗位
@@ -121,6 +123,10 @@ export default function Navbar() {
             </NavLink>
           ))}
           <AdminNavLink mobile onClick={() => setOpen(false)} />
+          <div className="flex items-center gap-1 px-3 py-1.5">
+            <ThemeToggle />
+            <span className="text-sm text-muted-foreground">白天 / 夜间模式</span>
+          </div>
         </nav>
       )}
     </header>
