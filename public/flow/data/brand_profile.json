@@ -656,5 +656,39 @@
    "主观+量化"
   ],
   "intro": "千宜投资 2015 年 5 月成立，明汯投资创始人裘慧明实控的另一家私募，聚焦期货及衍生品领域，采用主观+量化投资模式（界面新闻/排排网 2026-08 报道）。"
+ },
+ {
+  "title": "桥水中国",
+  "business": [
+   "宏观对冲",
+   "全天候策略",
+   "纯阿尔法"
+  ],
+  "intro": "桥水（中国）投资管理有限公司（Bridgewater China），全球最大对冲基金桥水基金在华独资私募，2018 年完成中基协私募证券登记（WFOE PFM），主力产品为「全天候增强型」等宏观配置策略，是外资私募在华规模最大的一家。",
+  "website": "https://www.bridgewater.cn/",
+  "linkedin": "https://cn.linkedin.com/company/bridgewater-associates"
+ },
+ {
+  "title": "德劭投资",
+  "business": [
+   "多策略",
+   "系统性量化",
+   "股票多空"
+  ],
+  "intro": "德劭投资（D. E. Shaw）在华主体德劭投资管理（上海）有限公司，全球顶级量化对冲基金 D. E. Shaw 的独资 WFOE，2019 年前后完成私募证券登记，策略与全球系统化平台联动。",
+  "website": "https://www.deshaw.com/",
+  "linkedin": "https://cn.linkedin.com/company/the-d-e-shaw-group"
+ },
+ {
+  "title": "英仕曼",
+  "business": [
+   "多策略",
+   "CTA（AHL）",
+   "股票量化（Numeric）",
+   "宏观（GLG）"
+  ],
+  "intro": "英仕曼（上海）投资管理有限公司（Man Group 中国），英国上市资产管理公司 Man Group 在华独资私募，依托 AHL（系统化CTA）、GLG（主观+量化）、Numeric（股票量化）等全球品牌的多策略平台，近年在中国积极扩张。",
+  "website": "https://www.man.com/",
+  "linkedin": "https://cn.linkedin.com/company/man-group"
  }
 ]
