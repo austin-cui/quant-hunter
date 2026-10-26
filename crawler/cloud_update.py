@@ -37,17 +37,6 @@ PAGES_DB = f"https://austin-cui.github.io/quant-hunter/flow/data/db.json"
 
 BJ = timezone(timedelta(hours=8))  # 北京时间
 
-# ---------- 拼音检索字段（与 export_data.py 同口径；优先用 crawler/vendor 内置包） ----------
-sys.path.insert(0, os.path.join(HERE, "vendor"))
-try:
-    from pypinyin import lazy_pinyin, Style
-
-    def to_pinyin(name: str) -> str:
-        return " ".join(lazy_pinyin(name or "", style=Style.NORMAL))
-except Exception:  # pragma: no cover
-    def to_pinyin(name: str) -> str:
-        return ""
-
 
 def log(*a):
     print(*a, flush=True)
@@ -244,14 +233,18 @@ def main():
     base_snaps = base.get("snapshots", [])
     log(f"基线: {base.get('generated_at')} / {len(base_orgs)} 主体 / {len(base_people)} 人")
 
-    # 机构名单 = resolutions.json（与本地 config.WATCHLIST 同步推送）
+    # 机构名单 = config.WATCHLIST ∩ resolutions.json（与 monitor.resolve_orgs 同一口径：
+    # 只遍历当前监控关键词，剔除非证券类主体，去重；缓存里的旧品牌残留不纳入）
+    SEC_TYPE = "私募证券投资基金管理人"
     res_path = os.path.join(HERE, "data", "resolutions.json")
     resolutions = json.load(open(res_path, encoding="utf-8"))
     from config import ALIAS_MAP, THEME_MAP, WATCHLIST
     tier_map = dict(WATCHLIST)  # 与 monitor.resolve_orgs 同一口径（含 _LEGACY 分档）
     orgs, seen = [], set()
-    for keyword, entities in resolutions.items():
-        for e in entities:
+    for keyword, _tier in WATCHLIST:
+        for e in resolutions.get(keyword, []):
+            if e.get("org_type") and e["org_type"] != SEC_TYPE:
+                continue
             uid = str(e["user_id"])
             if uid in seen:
                 continue
@@ -262,7 +255,7 @@ def main():
                 "aum_tier": tier_map.get(keyword, "百亿名单"),
                 "theme": THEME_MAP.get(keyword, ""),
             })
-    log(f"监控名单: {len(resolutions)} 品牌 / {len(orgs)} 主体")
+    log(f"监控名单: {len(WATCHLIST)} 品牌关键词 / {len(orgs)} 主体")
 
     results, fails = fetch_all(orgs)
 
@@ -347,7 +340,6 @@ def main():
             "history": hist, "departed": True,
             "departed_at": today, "departed_org": c["org_name"],
             "org_tenure_from": start,
-            "pinyin": to_pinyin(r.get("user_name", "")),
         }
         alumni_new.append(person)
         c["profile"] = {k: person[k] for k in
@@ -370,8 +362,6 @@ def main():
         p["title"] = title_of.get(p["org_user_id"], "")
         p["tier"] = tier_of.get(p["org_user_id"], "")
         p["trace_url"] = trace(p["org_user_id"])
-        if not p.get("pinyin"):
-            p["pinyin"] = to_pinyin(p.get("user_name", ""))
         soc = social_by_cert.get(p["cert_code"])
         if soc:
             p["social"] = soc
