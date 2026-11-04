@@ -4,7 +4,6 @@ import { Menu, X, BriefcaseBusiness } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import { getAllJobs } from '@/content/jobs'
 import { Button } from '@/components/ui/button'
-import AdminNavLink from '@/components/site/AdminNavLink'
 import ThemeToggle from '@/components/site/ThemeToggle'
 
 const navItems = [
@@ -78,7 +77,6 @@ export default function Navbar() {
               </NavLink>
             ),
           )}
-          <AdminNavLink />
           <ThemeToggle />
           <Button asChild size="sm" className="ml-3 font-semibold">
             <Link to="/jobs">
@@ -122,7 +120,6 @@ export default function Navbar() {
               {item.label}
             </NavLink>
           ))}
-          <AdminNavLink mobile onClick={() => setOpen(false)} />
           <div className="flex items-center gap-1 px-3 py-1.5">
             <ThemeToggle />
             <span className="text-sm text-muted-foreground">白天 / 夜间模式</span>
