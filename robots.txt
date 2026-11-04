@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /flow/
+Disallow: /qr/
+
+Sitemap: https://austin-cui.github.io/quant-hunter/sitemap.xml
