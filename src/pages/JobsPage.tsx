@@ -27,9 +27,6 @@ export default function JobsPage() {
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
       {/* 页头 */}
       <div className="mb-10 text-center">
-        <div className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-          Open Roles · 每周更新
-        </div>
         <h1 className="font-display text-3xl font-bold sm:text-4xl">在招岗位</h1>
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           机构名称以「类型 + 地区」标签保密展示，真实机构在第一通电话中确认。
