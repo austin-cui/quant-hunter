@@ -54,12 +54,7 @@ export const siteConfig = {
   },
 
   /* ---------- 数据看板（首页头部数字） ---------- */
-  stats: [
-    { value: '5+', label: '团队从业年限' },
-    { value: '30+', label: '合作机构' },
-    { value: '96%', label: '候选人满意度' },
-    { value: '48h', label: '投递响应承诺' },
-  ],
+  stats: [] as { value: string; label: string }[],
 
   /* ---------- 覆盖地区 ---------- */
   locations: ['北京', '上海', '深圳', '杭州', '香港', '新加坡'],
