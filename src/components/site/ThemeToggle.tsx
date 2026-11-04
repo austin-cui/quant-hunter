@@ -8,6 +8,7 @@ import { Moon, Sun } from 'lucide-react'
  */
 export default function ThemeToggle() {
   const [light, setLight] = useState(() =>
+    typeof document !== 'undefined' &&
     document.documentElement.classList.contains('light'),
   )
 
