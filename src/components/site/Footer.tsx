@@ -16,7 +16,7 @@ function SocialGlyph({ char, bg }: { char: string; bg: string }) {
 }
 
 export default function Footer() {
-  const { contact, socials, qrcodes, brand, brandZh, privacyNote } = siteConfig
+  const { contact, socials, qrcodes, brand, brandZh } = siteConfig
   const [qr, setQr] = useState<null | { label: string; src: string }>(null)
 
   const qrBase = import.meta.env.BASE_URL
@@ -155,10 +155,6 @@ export default function Footer() {
                 )
               })}
             </div>
-            <p className="mt-6 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-              <span className="mt-0.5 inline-block h-3 w-3 shrink-0 rounded-full border border-primary/60" />
-              {privacyNote}
-            </p>
           </div>
         </div>
 
