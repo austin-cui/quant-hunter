@@ -11,7 +11,6 @@ export default function FeaturedJobs() {
     <section className="border-t border-border/60 bg-card/20">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
         <SectionHeading
-          eyebrow="Open Roles"
           title="最新在招岗位"
         />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
