@@ -1,6 +1,7 @@
 import { siteConfig } from '@/config/site'
 
 export default function StatsBar() {
+  if (!siteConfig.stats.length) return null
   return (
     <section className="border-y border-border/60 bg-card/40">
       <div className="mx-auto grid max-w-6xl grid-cols-2 divide-x divide-border/60 sm:grid-cols-4">
