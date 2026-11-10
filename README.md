@@ -19,7 +19,7 @@ Austin Cui 的个人猎头主页 / 量化招聘静态网站，部署在 GitHub P
 src/
   config/site.ts        # ★ 全站唯一配置入口：姓名/联系方式/社交账号/FAQ/隐私文案
   content/jobs/index.ts # ★ 在招岗位清单（唯一数据源：上架/下架/改JD 都只改这里）
-  content/cases/        # 成功案例（一个案例一个文件，自动收录）
+  content/cases/        # 成功案例数据（2026-11-10 起不在页面展示，仅保留备查）
   pages/                # 页面：首页/岗位列表/岗位详情/投递管理/404
   sections/             # 首页区块：Hero/岗位/案例/FAQ/登记
   components/site/      # 导航栏、页脚、主题切换、管理入口等

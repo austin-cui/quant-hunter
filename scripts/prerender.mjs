@@ -37,11 +37,11 @@ const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').
 const meta = {
   '/': {
     title: 'Quant Hunter | 量化人才猎头',
-    description: '专注量化、机器学习与金融科技领域的人才招聘：最新在招岗位、匿名成功案例与候选人登记。每个岗位均有独立链接，可直接转发。',
+    description: '专注量化、机器学习与金融科技领域的人才招聘：最新在招岗位与候选人登记。',
   },
   '/jobs': {
     title: `在招岗位（${jobs.length}） | Quant Hunter`,
-    description: '量化、机器学习与金融科技领域最新在招岗位：量化研究、量化开发、高频交易。每个岗位均有独立链接，可直接转发。',
+    description: '量化、机器学习与金融科技领域最新在招岗位：量化研究、量化开发、高频交易。',
   },
 }
 for (const j of jobs) {

@@ -90,6 +90,6 @@ export const siteConfig = {
   meta: {
     title: 'Quant Hunter | Austin Cui 量化人才猎头',
     description:
-      '专注量化、机器学习与金融科技领域的人才招聘：最新在招岗位、匿名成功案例与候选人登记。',
+      '专注量化、机器学习与金融科技领域的人才招聘：最新在招岗位与候选人登记。',
   },
 }
