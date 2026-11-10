@@ -9,7 +9,7 @@ Austin Cui 的个人猎头主页 / 量化招聘静态网站，部署在 GitHub P
 
 - React 18 + Vite + TypeScript
 - Tailwind CSS 3 + shadcn/ui 组件
-- React Router（`/jobs/:slug` 岗位详情页、`/admin` 投递管理页）
+- React Router（`/jobs/:slug` 岗位详情页）
 - 支持白天 / 夜间模式（导航栏切换，localStorage 记忆）
 - 预渲染插件（构建时生成各路由静态 HTML + sitemap.xml）
 
@@ -20,7 +20,7 @@ src/
   config/site.ts        # ★ 全站唯一配置入口：姓名/联系方式/社交账号/FAQ/隐私文案
   content/jobs/index.ts # ★ 在招岗位清单（唯一数据源：上架/下架/改JD 都只改这里）
   content/cases/        # 成功案例数据（2026-11-10 起不在页面展示，仅保留备查）
-  pages/                # 页面：首页/岗位列表/岗位详情/投递管理/404
+  pages/                # 页面：首页/岗位列表/岗位详情/404
   sections/             # 首页区块：Hero/岗位/案例/FAQ/登记
   components/site/      # 导航栏、页脚、主题切换、管理入口等
   lib/submit.ts         # 投递提交（Cloudflare Worker，含重试与幂等）
@@ -51,8 +51,8 @@ python publish.py                     # 同步到 gh-pages 并等待 Pages 构�
 
 - Cloudflare Worker：`quant-hunter-api/`（工作区根目录旁），D1 存投递记录、R2 存简历附件
 - 接口：`POST /api/submit`（公开投递）、`/api/login`、`/api/submissions`、`/api/unread-count`、`/api/resume/:path`
-- 管理页：`/admin`，登录态 30 天（token 存 localStorage `qh-admin-token`）
-- ⚠️ workers.dev 域名在国内被墙：候选人投递和管理页查看都需要 VPN，页面上已注明
+- 投递查看与管理：**不在本网站**，统一走「候选人管家」的岗位库页面（2026-11-10 移除本站 /admin，避免功能重叠）
+- ⚠️ workers.dev 域名在国内被墙：候选人投递需要 VPN，页面上已注明
 
 ## 注意事项
 

@@ -80,8 +80,8 @@ export const siteConfig = {
     '你的简历绝不在未经你同意时提供给任何机构；每次推荐前都会与你确认机构与岗位要求。',
 
   /* ---------- 投递存储（Cloudflare Worker + D1 + R2，2026-10-13 从 Supabase 迁移） ---------- */
-  // 提交保存在 Cloudflare D1 数据库，简历附件存 R2；/admin 管理页凭密码查看下载。
-  // 留空 api.baseUrl 则回退为邮件客户端投递；管理页账号 austin.cui@co-careers.com
+  // 提交保存在 Cloudflare D1 数据库，简历附件存 R2；查看与管理走「候选人管家」岗位库页面。
+  // 留空 api.baseUrl 则回退为邮件客户端投递。本网站不再自带管理页（2026-11-10 移除，避免功能重叠）。
   api: {
     baseUrl: 'https://quant-hunter-api.austin-cui.workers.dev',
   },

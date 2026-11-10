@@ -5,7 +5,6 @@ import Footer from '@/components/site/Footer'
 import HomePage from '@/pages/HomePage'
 import JobsPage from '@/pages/JobsPage'
 import JobDetailPage from '@/pages/JobDetailPage'
-import AdminPage from '@/pages/AdminPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 
 /** 切换路由时回到顶部（锚点跳转除外） */
@@ -27,7 +26,6 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/jobs/:slug" element={<JobDetailPage />} />
-          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
