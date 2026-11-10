@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+.gh-token
+.cloudflare-credentials.txt
+# 流向台是独立子项目，其数据由另一条流水线生成并随发布带上，不进本仓库
+public/flow/
