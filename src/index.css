@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ===== Quant Hunter 暗色主题：深墨蓝 + 金色点缀 ===== */
+    --background: 222 33% 6%;        /* #0b0f17 深墨蓝 */
+    --foreground: 45 30% 94%;        /* 暖白 */
+    --card: 220 28% 9%;              /* 卡片底 */
+    --card-foreground: 45 30% 94%;
+    --popover: 220 28% 9%;
+    --popover-foreground: 45 30% 94%;
+    --primary: 40 62% 55%;           /* 金色 */
+    --primary-foreground: 222 33% 8%;
+    --secondary: 220 20% 14%;
+    --secondary-foreground: 45 30% 94%;
+    --muted: 220 20% 14%;
+    --muted-foreground: 218 12% 62%;
+    --accent: 220 20% 14%;
+    --accent-foreground: 45 30% 94%;
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 15% 16%;
+    --input: 220 15% 20%;
+    --ring: 40 62% 55%;
+    --radius: 0.625rem;
+    --sidebar-background: 222 33% 6%;
+    --sidebar-foreground: 45 30% 94%;
+    --sidebar-primary: 40 62% 55%;
+    --sidebar-primary-foreground: 222 33% 8%;
+    --sidebar-accent: 220 20% 14%;
+    --sidebar-accent-foreground: 45 30% 94%;
+    --sidebar-border: 220 15% 16%;
+    --sidebar-ring: 40 62% 55%;
+  }
+
+  /* ===== 白天模式：暖纸白 + 深金（默认仍是上面的暗色） ===== */
+  html.light {
+    --background: 45 35% 96%;        /* 暖纸白 */
+    --foreground: 222 30% 14%;       /* 墨蓝黑 */
+    --card: 0 0% 100%;
+    --card-foreground: 222 30% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 30% 14%;
+    --primary: 38 68% 40%;           /* 深金，浅底上保证对比度 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 25% 92%;
+    --secondary-foreground: 222 30% 14%;
+    --muted: 40 20% 93%;
+    --muted-foreground: 222 10% 42%;
+    --accent: 40 25% 92%;
+    --accent-foreground: 222 30% 14%;
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 40 12% 84%;
+    --input: 40 10% 78%;
+    --ring: 38 68% 40%;
+    --sidebar-background: 45 35% 96%;
+    --sidebar-foreground: 222 30% 14%;
+    --sidebar-primary: 38 68% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 40 25% 92%;
+    --sidebar-accent-foreground: 222 30% 14%;
+    --sidebar-border: 40 12% 84%;
+    --sidebar-ring: 38 68% 40%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    /* 极暗的径向渐变背景，营造纵深感 */
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(220 40% 12% / 0.9), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 110%, hsl(40 40% 10% / 0.35), transparent);
+    background-attachment: fixed;
+  }
+  html.light body {
+    /* 白天模式：暖白纸面 + 淡金晕染 */
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(45 65% 92% / 0.9), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 110%, hsl(40 75% 87% / 0.45), transparent);
+  }
+  ::selection {
+    background: hsl(40 62% 55% / 0.85);
+    color: hsl(222 33% 8%);
+  }
+  html.light ::selection {
+    background: hsl(38 68% 40% / 0.9);
+    color: hsl(0 0% 100%);
+  }
+  /* 细滚动条 */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(222 33% 6%);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(220 15% 20%);
+    border-radius: 5px;
+  }
+  html.light ::-webkit-scrollbar-track {
+    background: hsl(45 30% 93%);
+  }
+  html.light ::-webkit-scrollbar-thumb {
+    background: hsl(40 12% 76%);
+  }
+}
+
+@layer utilities {
+  /* 衬线展示字体：用于大标题，衬出「金融感」 */
+  .font-display {
+    font-family: Georgia, "Times New Roman", "Noto Serif SC", "Songti SC",
+      "SimSun", serif;
+  }
+  /* 金色渐变文字 */
+  .text-gold-gradient {
+    background: linear-gradient(120deg, hsl(40 70% 65%), hsl(40 55% 48%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  html.light .text-gold-gradient {
+    background: linear-gradient(120deg, hsl(38 62% 38%), hsl(40 72% 28%));
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  /* 卡片悬浮微光 */
+  .card-glow {
+    transition: border-color 0.25s ease, transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .card-glow:hover {
+    border-color: hsl(40 62% 55% / 0.45);
+    box-shadow: 0 0 0 1px hsl(40 62% 55% / 0.15),
+      0 12px 40px -12px hsl(40 62% 55% / 0.18);
+  }
+}
